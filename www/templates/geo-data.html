@@ -1,0 +1,23 @@
+<!-- This template receives geojson -->
+<ion-view title="{{ geoData.properties.name }}">
+  <ion-content overflow-scroll="true">
+    <meppit-map data-tap-disabled="true" geojson="geoData" height="50%" class="meppit-map"></meppit-map>
+      <h1 class="item">{{ geoData.properties.name }}</h1>
+      <div class="item item-body" dynamic-content="geoData.properties.description"></div>
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" href="#">
+          <i class="icon ion-thumbsup"></i>
+          Curtir
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-chatbox"></i>
+          Comentar
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-share"></i>
+          Compartilhar
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
