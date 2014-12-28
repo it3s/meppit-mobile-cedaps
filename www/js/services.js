@@ -72,7 +72,12 @@ angular.module('app.services', ['app.oauth'])
             deferred.resolve();
           }, function(error) {
             that.isAuthenticated = false;
-            deferred.reject(error);
+            // Could not authorize, try to authenticate
+            that.authenticate().then(function() {
+              deferred.resolve();
+            }, function(error) {
+              deferred.reject(error);
+            });
           });
           return deferred.promise;
         }

@@ -1,6 +1,6 @@
 angular.module('app.oauth', ['ngCordova.plugins.oauthUtility'])
-  .factory('OAuth', ['$q', '$http', '$cordovaOauthUtility'
-, function ($q, $http, $cordovaOauthUtility) {
+  .factory('OAuth', ['$ionicPlatform', '$q', '$http', '$cordovaOauthUtility'
+, function ($ionicPlatform, $q, $http, $cordovaOauthUtility) {
     var redirectUri = 'http://localhost/callback'
       , baseUrl     = 'http://192.168.0.107'
       , hasPlugin
@@ -15,10 +15,12 @@ angular.module('app.oauth', ['ngCordova.plugins.oauthUtility'])
       return cordovaMetadata.hasOwnProperty(pluginName) === true;
     };
 
-    // Use the local test uri if running inside a web browser
-    if (!hasPlugin("org.apache.cordova.inappbrowser")) {
-      redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
-    }
+    $ionicPlatform.ready(function() {
+      // Use the local test uri if running inside a web browser
+      if (!hasPlugin("org.apache.cordova.inappbrowser")) {
+        redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
+      }
+    });
 
     sendToken = function(clientId, clientSecret, redirectUri, token, grantType) {
       var deferred = $q.defer();
@@ -80,7 +82,7 @@ angular.module('app.oauth', ['ngCordova.plugins.oauthUtility'])
           } else {
             if (!angular.isDefined(window.cordova)) {
               window.sendToken = sendAuthorizationToken;
-              console.log("call sendRequestToken('RequestTokenFromPopUp')");
+              console.log("call sendToken('RequestTokenFromPopUp')");
             } else {
               deferred.reject('Could not find InAppBrowser plugin');
             }
