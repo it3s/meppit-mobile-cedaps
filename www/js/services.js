@@ -43,25 +43,47 @@ angular.module('app.services', ['app.oauth'])
       return {
         isAuthenticated: true  // TODO
       , currentUser: function() { return me; }
+      , saveAccessToken: function(token) {
+        this.isAuthenticated = true;
+        // Save the access token
+        accessTokenInfo = token;
+        localstorage.setObject('authentication.accessTokenInfo'
+                             , accessTokenInfo);
+        // Use injector to avoid circular dependency
+        $injector.invoke(['UsersResource', function(UsersResource) {
+          // Get user data and save locally
+          me = UsersResource.me();
+          me.avatar_url = baseUrl + me.avatar;
+          localstorage.setObject('authentication.me', me);
+        }]);
+      }
+      , authorize: function() {
+          var deferred = $q.defer()
+            , that = this;
+          if (!angular.isDefined(accessTokenInfo)
+           || !angular.isDefined(accessTokenInfo.refresh_token)) {
+            return this.authenticate();
+          }
+          OAuth.meppit.refreshAccessToken(clientId
+                                        , clientSecret
+                                        , accessTokenInfo.refresh_token
+          ).then(function(result) {
+            that.saveAccessToken(result);
+            deferred.resolve();
+          }, function(error) {
+            that.isAuthenticated = false;
+            deferred.reject(error);
+          });
+          return deferred.promise;
+        }
       , authenticate: function() {
           var deferred = $q.defer()
             , that = this;
 
           this.isAuthenticated = false;
-          OAuth.meppit(clientId, clientSecret, []).then(
+          OAuth.meppit.authenticate(clientId, clientSecret, []).then(
             function(result) {
-              that.isAuthenticated = true;
-              accessTokenInfo = result;
-              // Save the access token
-              localstorage.setObject('authentication.accessTokenInfo'
-                                   , accessTokenInfo);
-              // Use injector to avoid circular dependency
-              $injector.invoke(['UsersResource', function(UsersResource) {
-                // Get user data and save locally
-                me = UsersResource.me();
-                me.avatar_url = baseUrl + me.avatar;
-                localstorage.setObject('authentication.me', me);
-              }]);
+              that.saveAccessToken(result);
               deferred.resolve();
             }, function(error) {
               that.isAuthenticated = false;

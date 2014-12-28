@@ -150,7 +150,7 @@ angular.module('app.resources', ['ngResource'])
             // An error occurred
             if (response.status === 401) {
               // Unauthorized. Let's try to authenticate
-              authentication.authenticate().then(function() {
+              authentication.authorize().then(function() {
                 // Authenticated. Retry
                 call().then(function() {
                   // Success
