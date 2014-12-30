@@ -2,7 +2,7 @@ define(['angular'], function(angular) {
 
   'use strict';
 
-  var moduleName = 'app.utils.network'
+  var moduleName = 'app.core.network'
     , moduleDeps = [];
 
   angular.module(moduleName, moduleDeps)

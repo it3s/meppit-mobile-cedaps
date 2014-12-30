@@ -1,9 +1,9 @@
 <!-- This template receives geojson -->
-<ion-view title="{{ geoData.properties.name }}">
+<ion-view title="{{ geodata.properties.name }}">
   <ion-content overflow-scroll="true">
-    <meppit-map data-tap-disabled="true" geojson="geoData" height="50%" class="meppit-map"></meppit-map>
-      <h1 class="item">{{ geoData.properties.name }}</h1>
-      <div class="item item-body" dynamic-content="geoData.properties.description"></div>
+    <meppit-map data-tap-disabled="true" geojson="geodata" height="50%" class="meppit-map"></meppit-map>
+      <h1 class="item">{{ geodata.properties.name }}</h1>
+      <div class="item item-body" dynamic-content="geodata.properties.description"></div>
       <div class="item tabs tabs-secondary tabs-icon-left">
         <a class="tab-item" href="#">
           <i class="icon ion-thumbsup"></i>

@@ -1,10 +1,10 @@
-define(['angular', 'config', 'utils/network']
-, function(angular, config, networkUtils) {
+define(['angular', 'config', 'core/network']
+, function(angular, config, network) {
 
   'use strict';
 
-  var moduleName = 'app.utils.oauth'
-    , moduleDeps = [networkUtils];
+  var moduleName = 'app.core.oauth'
+    , moduleDeps = [network];
 
   angular.module(moduleName, moduleDeps)
   .factory('OAuth', ['$ionicPlatform', '$log', '$q', '$http', 'networkFactory'
@@ -51,7 +51,6 @@ define(['angular', 'config', 'utils/network']
       } else {
         postData['code'] = token;
       }
-      console.log('==>', postData);
       $http.defaults.headers.post['Content-Type'] =
         'application/x-www-form-urlencoded';
       $http.defaults.headers.post['Accept'] = 'application/json';
@@ -84,15 +83,16 @@ define(['angular', 'config', 'utils/network']
           sendAuthorizationToken = function(token) {
             sendToken(redirectUri, token, 'authorization_code')
             .then(function() {
-              deferred.resolve.apply(this, arguments); 
+              deferred.resolve.apply(this, arguments);
             }, function() {
               deferred.reject.appy(this, arguments);
             })
           };
 
           // Open the authorization window
-          browserRef = window.open(network.urlFor('/authorize' , urlParams)
-            , '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+          browserRef = $cordovaInAppBrowser.open(
+            network.urlFor('/authorize' , urlParams), '_blank'
+          , 'location=no,clearsessioncache=yes,clearcache=yes');
 
           if (hasPlugin("org.apache.cordova.inappbrowser")) {
             // Get the authorization code from url

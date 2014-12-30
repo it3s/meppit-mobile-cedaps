@@ -1,15 +1,15 @@
 define(['angular'
       , 'ngCordova'
       , 'vendor/scroll'
-      , 'resources'
-      , 'authentication/authenticationService'
-      , 'utils/datasource'
-      , 'map/directives']
+      , 'core/resources'
+      , 'core/authentication'
+      , 'core/datasource'
+      , 'core/directives']
 , function(angular, ngCordova, scroll, resources, authentication, datasource, map) {
 
   'use strict';
 
-  var moduleName = 'app.geoData.controllers'
+  var moduleName = 'app.geodata.controllers'
     , moduleDeps = [ngCordova, scroll, authentication, resources, datasource, map];
 
   angular.module(moduleName, moduleDeps)
@@ -17,23 +17,23 @@ define(['angular'
   .controller('AppCtrl', ['$scope', 'authentication'
 , function($scope, authentication) {
     // Don't pass the `authenticate` reference directly because it is bind to
-    // wrong object
+    // a wrong object
     $scope.login = function() { return authentication.authenticate(); };
     $scope.me = authentication.currentUser();
     $scope.isAuthenticated = authentication.isAuthenticated;
   }])
 
-  .controller('GeoDataCollectionCtrl', ['$scope'
+  .controller('geodataCollectionCtrl', ['$scope'
                                       , '$q'
                                       , '$cordovaGeolocation'
                                       , '$ionicLoading'
                                       , 'datasource'
-                                      , 'geoDataResource'
+                                      , 'geodataResource'
 , function($scope, $q, $cordovaGeolocation, $ionicLoading
-         , datasource, geoDataResource) {
+         , datasource, geodataResource) {
     var posOptions = { timeout: 10000, enableHighAccuracy: false }
       , lonLat = $q.defer()
-      , resource = geoDataResource.sortBy('location').where(lonLat.promise);
+      , resource = geodataResource.sortBy('location').where(lonLat.promise);
 
     $ionicLoading.show();
     // `$scope.datasource` is an object used by `ui-scroll`
@@ -53,10 +53,10 @@ define(['angular'
 
   }])
 
-  .controller('GeoDataCtrl', ['$scope', '$stateParams', 'geoData'
-, function($scope, $stateParams, geoData) {
+  .controller('geodataCtrl', ['$scope', '$stateParams', 'geodata'
+, function($scope, $stateParams, geodata) {
     // The `geoData` value is set by state provider resolver
-    $scope.geoData = geoData;
+    $scope.geodata = geodata;
   }]);
 
   return moduleName;

@@ -2,7 +2,7 @@ define(['angular'], function (angular) {
 
   'use strict';
 
-  var moduleName = 'app.utils.datasource'
+  var moduleName = 'app.core.datasource'
     , moduleDeps = [];
 
   angular.module(moduleName, moduleDeps)

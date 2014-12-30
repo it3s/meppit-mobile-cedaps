@@ -2,7 +2,7 @@ define(['angular', 'meppit'], function(angular, Meppit) {
 
   'use strict';
 
-  var moduleName = 'app.map.directives'
+  var moduleName = 'app.core.directives'
     , moduleDeps = []
 
   angular.module(moduleName, moduleDeps)

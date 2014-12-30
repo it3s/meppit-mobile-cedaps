@@ -1,14 +1,14 @@
 define(['angular'
        , 'ngResource'
-       , 'api'
-       , 'utils/network'
-       , 'authentication/authenticationService']
-, function(angular, ngResource, api, networkUtils, authentication) {
+       , 'core/api'
+       , 'core/network'
+       , 'core/authentication']
+, function(angular, ngResource, api, network, authentication) {
 
   'use strict';
 
-  var moduleName = 'app.resources'
-    , moduleDeps = [ngResource, api, networkUtils, authentication];
+  var moduleName = 'app.core.resources'
+    , moduleDeps = [ngResource, api, network, authentication];
 
   angular.module(moduleName, moduleDeps)
 
@@ -202,14 +202,15 @@ define(['angular'
   }])
 
   angular.injector([api]).invoke(['api', function(api) {
-    // Create dynamically resources for all configured API endpoints
-    angular.forEach(api.endpoints, function(endpoint, name) {
+    // Create dynamically resources for all configured API resources
+    // See `api.js`
+    angular.forEach(api.resources, function(res, name) {
       angular.module(moduleName)
-      .factory(name + 'Resource', ['resourceFactory', function(resource) {
-        return resource(endpoint.path
-                       , endpoint.params
-                       , endpoint.actions
-                       , endpoint.options);
+      .factory(name + 'Resource', ['resourceFactory', function(resourceFactory) {
+        return resourceFactory(res.path
+                             , res.params
+                             , res.actions
+                             , res.options);
       }]);
     });
   }]);

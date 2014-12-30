@@ -1,9 +1,9 @@
-define(['angular', './oauth', 'utils/localStorage']
+define(['angular', './oauth', 'core/localStorage']
 , function(angular, oauth, localStorage) {
 
   'use strict';
 
-  var moduleName = 'app.authentication.authenticationService'
+  var moduleName = 'app.core.authentication'
     , moduleDeps = [oauth, localStorage];
 
   angular.module(moduleName, moduleDeps)

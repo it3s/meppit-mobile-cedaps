@@ -2,7 +2,7 @@ define(['angular'], function(angular) {
 
   'use strict';
 
-  var moduleName = 'app.utils.localStorage'
+  var moduleName = 'app.core.localStorage'
     , moduleDeps = [];
 
   angular.module(moduleName, moduleDeps)
