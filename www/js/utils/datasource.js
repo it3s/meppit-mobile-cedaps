@@ -1,6 +1,11 @@
-'use strict'
+define(['angular'], function (angular) {
 
-angular.module('app.datasource', ['ngResource'])
+  'use strict';
+
+  var moduleName = 'app.utils.datasource'
+    , moduleDeps = [];
+
+  angular.module(moduleName, moduleDeps)
 
   .factory('datasource', ['$q', function ($q) {
     return function(resource, callback) {
@@ -40,7 +45,7 @@ angular.module('app.datasource', ['ngResource'])
           send = function() {
             var items = collection.slice(first, last);
             success(items);
-            if (typeof callback === 'function') {
+            if (angular.isFunction(callback)) {
               callback(items);
             }
           };
@@ -59,3 +64,6 @@ angular.module('app.datasource', ['ngResource'])
       return datasource;
     };
   }]);
+
+  return moduleName;
+});

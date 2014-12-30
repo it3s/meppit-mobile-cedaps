@@ -1,0 +1,14 @@
+define([], function() {
+  return {
+    api: {
+      protocol: 'https'
+    , host: 'meppit.com'
+    }
+  , oauth: {
+      protocol: 'https'
+    , host: 'meppit.com'
+    , clientId: ''
+    , clientSecret: ''
+    }
+  }
+});

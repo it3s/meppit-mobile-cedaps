@@ -1,9 +1,15 @@
-'use strict'
+define(['angular'
+      , 'ngIonic'
+      , 'ngCordova'
+      , 'controllers']
+, function (angular, ngIonic, ngCordova, controllers) {
 
-angular.module('app', ['ionic'
-                     , 'ngCordova'
-                     , 'app.directives'
-                     , 'app.controllers'])
+  'use strict';
+
+  var moduleName = 'app'
+    , moduleDeps = [ngIonic, ngCordova, controllers];
+
+  angular.module(moduleName, moduleDeps)
 
   .run(['$ionicPlatform', function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -16,19 +22,6 @@ angular.module('app', ['ionic'
         StatusBar.styleDefault();
       }
     });
-  }])
-
-  .config(['authenticationProvider', function(authenticationProvider) {
-    // Configure `Client Id` and `Client Secret`
-    authenticationProvider.config(
-      'd652249289412e3a5233f04d817e8bdea11834772d116e7cd0ba1428f56a49e0',
-      '241fd9be8d2971b51d82d85ec12431f75a1e25794c592ad37ff44a31b2cabd93'
-    );
-  }])
-
-  .config(['$httpProvider', function($httpProvider) {
-    // Set the default format we expect from http requests
-    $httpProvider.defaults.headers.common['Accept'] = 'application/json';
   }])
 
   .config(['$stateProvider', '$urlRouterProvider'
@@ -130,3 +123,6 @@ angular.module('app', ['ionic'
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/welcome');
   }]);
+
+  return moduleName;
+});

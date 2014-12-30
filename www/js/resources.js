@@ -1,16 +1,33 @@
-'use strict'
+define(['angular'
+       , 'ngResource'
+       , 'api'
+       , 'utils/network'
+       , 'authentication/authenticationService']
+, function(angular, ngResource, api, networkUtils, authentication) {
 
-angular.module('app.resources', ['ngResource'])
+  'use strict';
 
-  .factory('resource', ['$q', '$state', '$resource', 'api', 'authentication'
-, function($q, $state, $resource, api, authentication) {
+  var moduleName = 'app.resources'
+    , moduleDeps = [ngResource, api, networkUtils, authentication];
+
+  angular.module(moduleName, moduleDeps)
+
+  .factory('resourceFactory', ['$q'
+                             , '$state'
+                             , '$resource'
+                             , 'api'
+                             , 'networkFactory'
+                             , 'authentication'
+, function($q, $state, $resource, api, networkFactory, authentication) {
     var resourceFactory
+      , network = networkFactory(api)
       , callNgResourceFunction
       , deferredCall
       , contentTypes = {
           json:    'application/json'
         , geojson: 'application/vnd.geo+json'
-        };
+        }
+      , defaultContentType = 'json';
 
     callNgResourceFunction = function(ngResource, fnName, params, args) {
       args[0] = angular.extend({}, params, args[0]);
@@ -32,7 +49,7 @@ angular.module('app.resources', ['ngResource'])
     }
 
     resourceFactory = function(endpoint, paramDefaults, actions, options) {
-      var url = api.urlFor(endpoint)
+      var url = network.urlFor(endpoint)
         , result
         , actionsDefaults = {
             'get': { method: 'GET' }
@@ -45,6 +62,7 @@ angular.module('app.resources', ['ngResource'])
             Authorization: function() {
               return authentication.getAuthorizationHeader();
             }
+          , Accept: contentTypes[defaultContentType]
           }
         , createNgResource;
 
@@ -56,17 +74,19 @@ angular.module('app.resources', ['ngResource'])
         _headers = angular.copy(headers);
         _actions = angular.extend({}, angular.copy(actionsDefaults)
                                     , angular.copy(actions));
-        angular.forEach(_actions, function(opts, action) {
-          if (action === 'query' && queryReturnsArray === false) {
-            opts.isArray = false;
+        angular.forEach(_actions, function(action, name) {
+          if (name === 'query' && queryReturnsArray === false) {
+            action.isArray = false;
           }
           if (angular.isDefined(_headers)) {
             // Add Authorization header to all actions
-            if (!angular.isDefined(opts.headers)) { opts.headers = {}; }
-            angular.extend(opts.headers, _headers)
+            if (!angular.isDefined(action.headers)) { action.headers = {}; }
+            angular.extend(action.headers, _headers)
           }
           // Converts actions endpoint to absolute url
-          if (angular.isDefined(opts.url)) { opts.url = api.urlFor(opts.url); }
+          if (angular.isDefined(action.url)) {
+            action.url = network.urlFor(action.url);
+          }
         });
         ngResource = $resource(url, paramDefaults, _actions, options);
         ngResource.__actions = _actions;
@@ -81,9 +101,9 @@ angular.module('app.resources', ['ngResource'])
       , nextPage: function() { this.params.page = (this.params.page || 1) + 1; }
       , as: function(type) {
           var copy = this.clone()
-            , headers = angular.extend({
+            , headers = angular.extend({}, headersDefaults, {
                 'Accept': contentTypes[type]
-              }, headersDefaults);
+              });
           copy.ngResource = createNgResource(headers, false);
           return copy;
         }
@@ -181,12 +201,18 @@ angular.module('app.resources', ['ngResource'])
     return resourceFactory;
   }])
 
-  .factory('geoDataResource', ['resource', 'api', function(resource, api) {
-    return resource('/geo_data/:geoDataId', { geoDataId: '@id' });
-  }])
-
-  .factory('UsersResource', ['resource', 'api', function(resource, api) {
-    return resource('/users/:userId'
-                  , { userId: '@id' }
-                  , { me: { url: '/me', method: 'GET' } });
+  angular.injector([api]).invoke(['api', function(api) {
+    // Create dynamically resources for all configured API endpoints
+    angular.forEach(api.endpoints, function(endpoint, name) {
+      angular.module(moduleName)
+      .factory(name + 'Resource', ['resourceFactory', function(resource) {
+        return resource(endpoint.path
+                       , endpoint.params
+                       , endpoint.actions
+                       , endpoint.options);
+      }]);
+    });
   }]);
+
+  return moduleName;
+});

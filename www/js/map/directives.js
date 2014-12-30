@@ -1,4 +1,11 @@
-angular.module('app.directives', [])
+define(['angular', 'meppit'], function(angular, Meppit) {
+
+  'use strict';
+
+  var moduleName = 'app.map.directives'
+    , moduleDeps = []
+
+  angular.module(moduleName, moduleDeps)
 
   .directive('meppitMap', ['$sce'
                          , '$parse'
@@ -91,3 +98,6 @@ angular.module('app.directives', [])
       }
     };
   }]);
+
+  return moduleName;
+});
