@@ -14,15 +14,18 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">{{ isAuthenticated }}</h1>
+      <h1 class="title"></h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close ng-hide="isAuthenticated" href="#/app/login">
+        <ion-item nav-clear menu-close ng-hide="authInfo.isAuthenticated" ng-click="login()">
           Entrar
         </ion-item>
-        <ion-item class="item-avatar" nav-clear menu-close ng-show="isAuthenticated">
-          <img ng-src="{{ me.avatar_url }}"> {{ me.name }}
+        <ion-item class="item-avatar item-button-right" nav-clear menu-close ng-show="authInfo.isAuthenticated">
+          <img ng-src="{{ authInfo.me.avatar_url }}">
+          <h2 class="user-name">{{ authInfo.me.name }}</h2>
+          <p class="user-detail"></p>
+          <button class="button button-clear" ng-click="logout()">Sair</button>
         </ion-item>
         <ion-item menu-close href="#/app/geo_data">
           Serviços próximos

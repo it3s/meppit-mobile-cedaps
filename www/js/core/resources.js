@@ -1,40 +1,43 @@
 define(['angular'
+       , 'ngCordova'
        , 'ngResource'
        , 'core/api'
        , 'core/network'
+       , 'core/native'
        , 'core/authentication']
-, function(angular, ngResource, api, network, authentication) {
+, function(angular, ngCordova, ngResource, api, network, native, authentication) {
 
   'use strict';
 
   var moduleName = 'app.core.resources'
-    , moduleDeps = [ngResource, api, network, authentication];
+    , moduleDeps = [ngResource, api, network, native, authentication];
 
   angular.module(moduleName, moduleDeps)
 
   .factory('resourceFactory', ['$q'
                              , '$state'
+                             , '$ionicHistory'
+                             , '$ionicLoading'
                              , '$resource'
                              , 'api'
                              , 'networkFactory'
+                             , 'toast'
                              , 'authentication'
-, function($q, $state, $resource, api, networkFactory, authentication) {
-    var resourceFactory
-      , network = networkFactory(api)
-      , callNgResourceFunction
-      , deferredCall
+, function($q, $state, $ionicHistory, $ionicLoading, $resource
+         , api, networkFactory, toast, authentication) {
+    var network = networkFactory(api)
       , contentTypes = {
           json:    'application/json'
         , geojson: 'application/vnd.geo+json'
         }
       , defaultContentType = 'json';
 
-    callNgResourceFunction = function(ngResource, fnName, params, args) {
+    function callNgResourceFunction(ngResource, fnName, params, args) {
       args[0] = angular.extend({}, params, args[0]);
       return ngResource[fnName].apply(ngResource, args).$promise;
-    };
+    }
 
-    deferredCall = function(promises, fn, fnArgs) {
+    function deferredCall(promises, fn, fnArgs) {
       var deferred = $q.defer();
       $q.all(promises).then(function() {
         $q.when(fn.apply(this, fnArgs)).then(function() {
@@ -48,7 +51,7 @@ define(['angular'
       return deferred.promise;
     }
 
-    resourceFactory = function(endpoint, paramDefaults, actions, options) {
+    function resourceFactory(endpoint, paramDefaults, actions, options) {
       var url = network.urlFor(endpoint)
         , result
         , actionsDefaults = {
@@ -63,10 +66,9 @@ define(['angular'
               return authentication.getAuthorizationHeader();
             }
           , Accept: contentTypes[defaultContentType]
-          }
-        , createNgResource;
+          };
 
-      createNgResource = function(headers, queryReturnsArray) {
+      function createNgResource(headers, queryReturnsArray) {
         var _actions
           , _headers
           , ngResource;
@@ -91,14 +93,16 @@ define(['angular'
         ngResource = $resource(url, paramDefaults, _actions, options);
         ngResource.__actions = _actions;
         return ngResource;
-      };
+      }
 
       result = {
-        endpoint: endpoint
+        _redirectOnError: true
+      , endpoint: endpoint
       , ngResource: createNgResource(headersDefaults)
       , params:   {}
       , promises: []
       , nextPage: function() { this.params.page = (this.params.page || 1) + 1; }
+      // Select the format we want to receive from API server. Default: json
       , as: function(type) {
           var copy = this.clone()
             , headers = angular.extend({}, headersDefaults, {
@@ -107,6 +111,16 @@ define(['angular'
           copy.ngResource = createNgResource(headers, false);
           return copy;
         }
+      // Define if the we should fail silently or redirect to home and display
+      // an error message. Redirect by default.
+      , silent: function(flag) {
+        var copy = this.clone();
+        if (!angular.isDefined(flag)) {
+          flag = true;
+        }
+        copy._redirectOnError = !flag;
+        return copy;
+      }
       , clone: function() {
           // Create a  shallow copy of this object
           var copy = angular.extend({}, this);
@@ -156,47 +170,61 @@ define(['angular'
         result[action] = function() {
           var deferred = $q.defer()
             , args = arguments
-            , that = this
-            , call = function() {
-                return deferredCall(that.promises
-                                  , callNgResourceFunction
-                                  , [that.ngResource, action, that.params, args]);
-            };
-          // Try to get the resource content
-          call().then(function() {
-            // Success
-            deferred.resolve.apply(this, arguments);
-          }, function(response) {
-            // An error occurred
-            if (response.status === 401) {
-              // Unauthorized. Let's try to authenticate
-              authentication.authorize().then(function() {
-                // Authenticated. Retry
-                call().then(function() {
-                  // Success
-                  deferred.resolve.apply(this, arguments);
-                }, function(response) {
-                  // An error occurred again. Rejected.
-                  // TODO: Go to home and display an error message
-                  deferred.reject(response.statusText
-                                + ' (' + response.status + ')');
-                });
-              }, function(error) {
-                // Problem authenticating
-                deferred.reject.apply(error);
-              });
-            } else {
-              // Unknow error
-              // TODO: Go to home and display an error message
-              deferred.reject(response.statusText
-                            + ' (' + response.status + ')');
+            , retries = 0
+            , totalRetries = 2
+            , that = this;
+
+          function failed(error) {
+            deferred.reject.apply(error);
+            // TODO display error message
+            console.log(error);
+            if (that._redirectOnError) {
+              $ionicLoading.hide();
+              $state.go('app.welcome');
+              toast.show(error, 'long', 'center');
             }
-          });
+            retries = 0;
+          }
+
+          function call() {
+            retries++;
+            deferredCall(that.promises
+                       , callNgResourceFunction
+                       , [that.ngResource, action, that.params, args])
+            .then(function() {
+              deferred.resolve.apply(this, arguments);
+              // Reset retries counter
+              retries = 0;
+            }, function(response) {
+              // An error occurred
+              if (response.status === 401 && retries < totalRetries) {
+                // Unauthorized. Let's try to re-authorize
+                authentication.authorize().then(function() {
+                  // Authorized. Retry
+                  call();
+                }, function(error) {
+                  if (retries < totalRetries) {
+                    call()
+                  } else {
+                    failed(error);
+                  }
+                });
+              } else {
+                if (retries < totalRetries) {
+                  call()
+                } else {
+                  failed(response.status + ' (' + response.statusText + ')');
+                }
+              }
+            });
+          }
+          // Try to get the resource content
+          call();
           return deferred.promise;
         };
       });
       return result;
-    };
+    }
 
     return resourceFactory;
   }])

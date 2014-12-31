@@ -14,13 +14,23 @@ define(['angular'
 
   angular.module(moduleName, moduleDeps)
 
-  .controller('AppCtrl', ['$scope', 'authentication'
-, function($scope, authentication) {
+  .controller('AppCtrl', ['$scope', '$state', '$ionicHistory', 'authentication'
+, function($scope, $state, $ionicHistory, authentication) {
     // Don't pass the `authenticate` reference directly because it is bind to
     // a wrong object
-    $scope.login = function() { return authentication.authenticate(); };
-    $scope.me = authentication.currentUser();
-    $scope.isAuthenticated = authentication.isAuthenticated;
+    $scope.login = function() {
+      authentication.authenticate().then(function() {
+        $state.go('app.home')
+      });
+    };
+    $scope.logout = function() {
+      authentication.forget();
+      $state.go('app.welcome').then(function() {
+        // TODO: test me
+        $ionicHistory.clearCache();
+      });
+    };
+    $scope.authInfo = authentication.info;
   }])
 
   .controller('geodataCollectionCtrl', ['$scope'

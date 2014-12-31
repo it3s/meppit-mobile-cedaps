@@ -7,7 +7,7 @@ define(['angular'], function(angular) {
 
   angular.module(moduleName, moduleDeps)
 
-  .factory('localStorage', ['$window', '$q', function($window, $q) {
+  .factory('storage', ['$window', '$q', function($window, $q) {
     return {
       set: function(key, value) {
         $q.when(value).then(function(value) {
@@ -19,6 +19,9 @@ define(['angular'], function(angular) {
     , get: function(key, defaultValue) {
         return $window.localStorage[key] || defaultValue;
       }
+    , delete: function(key) {
+        $window.localStorage.removeItem(key);
+      }
     , setObject: function(key, value) {
         $q.when(value).then(function(value) {
           if (angular.isDefined(value)) {
@@ -29,6 +32,9 @@ define(['angular'], function(angular) {
     , getObject: function(key) {
         var value = $window.localStorage[key];
         return angular.isDefined(value) ? angular.fromJson(value) : undefined;
+      }
+    , deleteObject: function(key) {
+        $window.localStorage.removeItem(key);
       }
     };
   }]);

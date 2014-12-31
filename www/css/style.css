@@ -6,3 +6,7 @@
 .meppit-map {
   width: 100%;
 }
+
+.item p.user-detail {
+  font-size: 0.8em;
+}
