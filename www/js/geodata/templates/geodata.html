@@ -1,7 +1,7 @@
 <!-- This template receives geojson -->
 <ion-view title="{{ geodata.properties.name }}">
   <ion-content overflow-scroll="true">
-    <meppit-map data-tap-disabled="true" geojson="geodata" height="50%" class="meppit-map"></meppit-map>
+    <map-view data-tap-disabled="true" geojson="geodata" height="50%" class="meppit-map"></map-view>
       <h1 class="item">{{ geodata.properties.name }}</h1>
       <div class="item item-body" dynamic-content="geodata.properties.description"></div>
       <div class="item tabs tabs-secondary tabs-icon-left">

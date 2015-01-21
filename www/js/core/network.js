@@ -14,8 +14,8 @@ define(['angular'], function(angular) {
           return this.protocol + '://'
                + this.host
                + (this.port ? ':' + this.port : '') + '/'
-               + this.path
-               + (this.version ? '/' + this.version : '');
+               + (this.path ? this.path + '/' : '')
+               + (this.version ? this.version + '/' : '');
         }
       , encodeParams: function(params) {
         var encodedParams = [];
@@ -28,6 +28,12 @@ define(['angular'], function(angular) {
         return encodedParams.join('&');
       }
       , urlFor: function(path, params) {
+          if(!angular.isDefined(path)) {
+            path = '';
+          }
+          if(path[0] == '/') {
+            path = path.slice(1);
+          }
           return this.baseUrl() + path
           + (angular.isDefined(params) ? '?' + this.encodeParams(params) : '');
         }

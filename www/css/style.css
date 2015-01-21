@@ -10,3 +10,8 @@
 .item p.user-detail {
   font-size: 0.8em;
 }
+
+.leaflet-control-attribution {
+  /* Remove attribution from map. We will display it at another place. */
+  display: none;
+}

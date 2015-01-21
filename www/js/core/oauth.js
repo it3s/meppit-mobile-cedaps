@@ -13,6 +13,7 @@ define(['angular', 'config', 'core/network', 'core/native']
     var redirectUri = 'http://localhost/callback'
       , clientId = config.oauth.clientId
       , clientSecret = config.oauth.clientSecret
+      // You can edit `config.js` to use a custom host
       , defaults = {
           protocol: 'https'
         , host: 'meppit.com'

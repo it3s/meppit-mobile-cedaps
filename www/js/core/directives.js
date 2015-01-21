@@ -7,7 +7,7 @@ define(['angular', 'meppit'], function(angular, Meppit) {
 
   angular.module(moduleName, moduleDeps)
 
-  .directive('meppitMap', ['$sce'
+  .directive('mapView', ['$sce'
                          , '$parse'
                          , '$compile'
                          , '$cordovaInAppBrowser'

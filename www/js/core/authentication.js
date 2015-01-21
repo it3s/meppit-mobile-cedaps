@@ -1,18 +1,17 @@
-define(['angular', './oauth', 'core/localStorage']
-, function(angular, oauth, localStorage) {
+define(['angular', 'config', './oauth', './website', 'core/localStorage']
+, function(angular, config, oauth, website, localStorage) {
 
   'use strict';
 
   var moduleName = 'app.core.authentication'
-    , moduleDeps = [oauth, localStorage];
+    , moduleDeps = [oauth, website, localStorage];
 
   angular.module(moduleName, moduleDeps)
 
   .factory('authentication'
-, ['$q', '$log', '$injector', '$rootScope', 'OAuth', 'storage'
-, function ($q, $log, $injector, $rootScope, OAuth, storage) {
-    var baseUrl = 'http://192.168.0.107'  // Fixme
-      , info = {
+, ['$q', '$log', '$injector', '$rootScope', 'OAuth', 'website', 'storage'
+, function ($q, $log, $injector, $rootScope, OAuth, website, storage) {
+    var info = {
           isAuthenticated: false
         , isAuthorized:    false
         , accessTokenInfo: undefined
@@ -29,7 +28,7 @@ define(['angular', './oauth', 'core/localStorage']
         usersResource.me().then(function(me) {
           info.me = me;
           if (angular.isDefined(me)) {
-            me.avatar_url = baseUrl + me.avatar;
+            me.avatar_url = website.urlFor(me.avatar);
             storage.setObject('authentication.me', me);
           }
           deferred.resolve(me);

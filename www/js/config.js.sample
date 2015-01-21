@@ -10,5 +10,9 @@ define([], function() {
     , clientId: ''
     , clientSecret: ''
     }
+  , website: {
+      protocol: 'http'
+    , host: 'meppit.com'
+    }
   }
 });
