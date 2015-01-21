@@ -3,13 +3,14 @@ define(['angular'
       , 'ngIonic'
       , 'ngCordova'
       , 'core/resources'
-      , 'geodata/controllers']
-, function (angular, routes, ngIonic, ngCordova, resources, controllers) {
+      , 'geodata/controllers'
+      , 'comments/controllers']
+, function (angular, routes, ngIonic, ngCordova, resources, geoDataCtrls, commentsCtrls) {
 
   'use strict';
 
   var moduleName = 'app'
-    , moduleDeps = [ngIonic, ngCordova, resources, controllers];
+    , moduleDeps = [ngIonic, ngCordova, resources, geoDataCtrls, commentsCtrls];
 
   angular.module(moduleName, moduleDeps)
 

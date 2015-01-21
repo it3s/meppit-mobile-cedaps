@@ -37,13 +37,29 @@ define(['angular', 'config'], function(angular, config) {
             geodata: {
               path: '/geo_data/:geodataId'
             , params: { geodataId: '@id' }
+            , actions: {
+                comments: {
+                  url: '/comments'
+                , method: 'GET'
+                , isArray: true
+                , resourceType: 'comments'
+                }
+              }
             }
           , users: {
               path: '/users/:userId'
             , params: { userId: '@id' }
             , actions: {
-                me: { url: '/me', method: 'GET' }
+                me: {
+                  url: '/me'
+                , method: 'GET'
+                , resourceType: 'users'
+                }
               }
+            }
+          , comments: {
+              path: '/comments/:commentId'
+            , params: { commentId: '@id' }
             }
           }
         };

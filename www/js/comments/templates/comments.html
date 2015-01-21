@@ -1,0 +1,7 @@
+<ion-view title="Comentários">
+  <ion-content ui-scroll-viewport padding="false" class="has-header" overflow-scroll="true" >
+    <ion-list>
+      <ion-item ui-scroll="item in datasource" is-loading="loading" padding="5" buffer-size="25" href="#/app{{ baseUrl }}/comments/{{ item.id }}"><div dynamic-content="item.comment"></div></ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

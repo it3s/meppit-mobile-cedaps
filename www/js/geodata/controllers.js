@@ -5,12 +5,12 @@ define(['angular'
       , 'core/authentication'
       , 'core/datasource'
       , 'core/directives']
-, function(angular, ngCordova, scroll, resources, authentication, datasource, map) {
+, function(angular, ngCordova, scroll, resources, authentication, datasource, directives) {
 
   'use strict';
 
   var moduleName = 'app.geodata.controllers'
-    , moduleDeps = [ngCordova, scroll, authentication, resources, datasource, map];
+    , moduleDeps = [ngCordova, scroll, authentication, resources, datasource, directives];
 
   angular.module(moduleName, moduleDeps)
 

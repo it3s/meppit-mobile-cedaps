@@ -90,8 +90,7 @@ define(['angular', 'meppit'], function(angular, Meppit) {
               return false;
             };
             // Append the dynamic content to DOM tree
-            pageEl = $compile(html)(scope);
-            element.append(pageEl);
+            element.append(html);
             element.addClass("dynamic-content");
           });
         };

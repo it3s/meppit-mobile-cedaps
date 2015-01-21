@@ -49,8 +49,8 @@ define(['angular'], function(angular) {
           templateUrl: 'js/geodata/templates/geodata.html'
         , controller: 'geodataCtrl'
         }
-      },
-      resolve: {
+      }
+    , resolve: {
         geodata: ['$stateParams', 'geodataResource'
       , function($stateParams, geodataResource) {
           // Get object using 'resolve' instead of controller to be able to add
@@ -59,6 +59,36 @@ define(['angular'], function(angular) {
             geodataId: $stateParams.geodataId
           });
         }]
+      }
+    })
+
+    .state('app.geodata_comments', {
+      url: '/geo_data/:geodataId/comments'
+      , views: {
+        'menuContent': {
+          templateUrl: 'js/comments/templates/comments.html'
+        , controller: 'commentsCtrl'
+        }
+      }
+      , resolve: {
+          query: ['$stateParams', function($stateParams) {
+            return {
+              owner: 'GeoData#' + $stateParams.geodataId
+            };
+          }]
+        , baseUrl: ['$stateParams', function($stateParams) {
+            return '/geo_data/' + $stateParams.geodataId;
+          }]
+      }
+    })
+
+    .state('app.geodata_comment', {
+      url: '/geo_data/:geodataId/comments/:commentId'
+      , views: {
+        'menuContent': {
+          templateUrl: 'js/comments/templates/comment.html'
+        , controller: 'commentCtrl'
+        }
       }
     })
 
