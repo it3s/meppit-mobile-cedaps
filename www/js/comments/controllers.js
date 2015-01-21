@@ -20,13 +20,15 @@ define(['angular'
                              , 'commentsResource'
                              , 'query'
                              , 'baseUrl'
-, function($scope, $q, $ionicLoading, datasource, commentsResource, query, baseUrl) {
+                             , 'content'
+, function($scope, $q, $ionicLoading, datasource, commentsResource, query, baseUrl, content) {
     var resource = commentsResource.where(query);
 
     $scope.baseUrl = baseUrl;
     $ionicLoading.show();
     // `$scope.datasource` is an object used by `ui-scroll`
     $scope.datasource = datasource(resource, $ionicLoading.hide);
+    $scope.newComment = angular.extend({}, { comment: '' }, content);
   }])
 
   .controller('commentCtrl', ['$scope', '$stateParams', 'commentsResource'

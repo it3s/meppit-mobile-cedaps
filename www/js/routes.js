@@ -79,6 +79,12 @@ define(['angular'], function(angular) {
         , baseUrl: ['$stateParams', function($stateParams) {
             return '/geo_data/' + $stateParams.geodataId;
           }]
+        , content: ['$stateParams', function($stateParams) {
+            return {
+              content_type: 'GeoData'
+            , content_id: $stateParams.geodataId
+            };
+          }]
       }
     })
 

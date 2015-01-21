@@ -11,6 +11,20 @@
   font-size: 0.8em;
 }
 
+.comment-input {
+  height: 70px;
+  padding: 10px;
+}
+
+.comment-input textarea {
+  height: 50px;
+}
+
+.comment-input .button.comment-send {
+  font-size: 2.7em;
+  width: 2em;
+}
+
 .leaflet-control-attribution {
   /* Remove attribution from map. We will display it at another place. */
   display: none;
