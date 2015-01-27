@@ -31,34 +31,41 @@ define(['angular', 'config', 'core/network', 'core/native']
 
     function sendToken(token, grantType) {
       var deferred = $q.defer()
+          // Define the data we always have to send with the token.
         , postData = {
             grant_type: grantType
           , client_id: clientId
           , client_secret: clientSecret
           , redirect_uri: redirectUri
         };
+      // Check which type of token we should send and select the right one.
       if (grantType === 'refresh_token') {
         postData['refresh_token'] = token;
       } else {
         postData['code'] = token;
       }
+      // Define some headers.
       $http.defaults.headers.post['Content-Type'] =
         'application/x-www-form-urlencoded';
       $http.defaults.headers.post['Accept'] = 'application/json';
+      // Make the POST request.
       $http({method: "post", url: network.urlFor('/token')
                            , data: network.encodeParams(postData)})
       .success(function (data) {
         $log.info(data);
+        // Resolve the promise using the data received.
         deferred.resolve(data);
       })
       .error(function (data, status) {
         deferred.reject('Problem authenticating');
       });
+      // Return a promise because the request is async.
       return deferred.promise;
     }
 
     return {
       meppit: {
+        // OAuth2 authentication proccess.
         authenticate: function (appScope) {
           var deferred = $q.defer()
             , browserRef
@@ -71,6 +78,8 @@ define(['angular', 'config', 'core/network', 'core/native']
               , response_type: 'code'
               };
 
+          // Send the autorization token to server to get access and refresh
+          // tokens.
           sendAuthorizationToken = function(token) {
             sendToken(token, 'authorization_code')
             .then(function() {
@@ -85,6 +94,8 @@ define(['angular', 'config', 'core/network', 'core/native']
             network.urlFor('/authorize' , urlParams), '_blank'
           , 'location=no,clearsessioncache=yes,clearcache=yes');
 
+          // Running as hybrid app so we can get the authorization code directly
+          // from browser.
           if (hasPlugin('org.apache.cordova.inappbrowser')) {
             // Get the authorization code from url
             browserRef.addEventListener('loadstart', function (event) {
@@ -95,6 +106,8 @@ define(['angular', 'config', 'core/network', 'core/native']
               }
             });
           } else {
+            // Running in normal webbrowser. Need user interection to copy the
+            // authorization code and send throw console.
             if (!angular.isDefined(window.cordova)) {
               window.sendCode = sendAuthorizationToken;
               $log.info("call sendCode('AuthorizationCodeFromPopUp')");
@@ -104,6 +117,7 @@ define(['angular', 'config', 'core/network', 'core/native']
           }
           return deferred.promise;
         }
+      // Use the refresh token to get a new access token.
       , refreshAccessToken: function(refreshToken) {
           return sendToken(refreshToken, 'refresh_token')
         }

@@ -5,6 +5,7 @@ define(['angular', 'ngCordova'], function(angular, ngCordova) {
   var moduleName = 'app.core.native'
     , moduleDeps = [ngCordova];
 
+  // Check if a specified cordova plugin is included.
   function hasPlugin(pluginName) {
     var cordovaMetadata;
     if (!angular.isDefined(window.cordova)) {

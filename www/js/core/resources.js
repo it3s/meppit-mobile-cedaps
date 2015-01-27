@@ -32,11 +32,15 @@ define(['angular'
         }
       , defaultContentType = 'json';
 
+    // Call the original ngResource.resource functions and return a promise.
     function callNgResourceFunction(ngResource, fnName, params, args) {
       args[0] = angular.extend({}, params, args[0]);
       return ngResource[fnName].apply(ngResource, args).$promise;
     }
 
+    // Call the function `fn` with `fnArgs` after all `promises` are resolved.
+    // Return a promise that will be resolved with the function return or will
+    // be rejected if some `promeses` are rejected.
     function deferredCall(promises, fn, fnArgs) {
       var deferred = $q.defer();
       $q.all(promises).then(function() {
@@ -51,6 +55,7 @@ define(['angular'
       return deferred.promise;
     }
 
+    // resourceFactory allows the same arguments than ngResource.resource.
     function resourceFactory(endpoint, paramDefaults, actions, options) {
       var url = network.urlFor(endpoint)
         , result
@@ -68,6 +73,8 @@ define(['angular'
           , Accept: contentTypes[defaultContentType]
           };
 
+      // Create the ngResource.resource adding authorization token as default
+      // header.
       function createNgResource(headers, queryReturnsArray) {
         var _actions
           , _headers
@@ -111,7 +118,7 @@ define(['angular'
           copy.ngResource = createNgResource(headers, false);
           return copy;
         }
-      // Define if the we should fail silently or redirect to home and display
+      // Define if we should fail silently or redirect to home and display
       // an error message. Redirect by default.
       , silent: function(flag) {
         var copy = this.clone();
@@ -121,8 +128,8 @@ define(['angular'
         copy._redirectOnError = !flag;
         return copy;
       }
+      // Create a copy of this object
       , clone: function() {
-          // Create a  shallow copy of this object
           var copy = angular.extend({}, this);
           // Override the properties that store states
           copy.promises = this.promises.slice();
@@ -140,7 +147,8 @@ define(['angular'
       [ ['sortBy', 'sort']
       , ['page',   'page']
       , ['per',    'per']
-      , ['where',  'params'] ].forEach(function(item) {
+      , ['where',  'params']
+      ].forEach(function(item) {
         var methodName = item[0]
           , paramKey   = item[1];
 
@@ -176,10 +184,11 @@ define(['angular'
 
           function failed(error) {
             deferred.reject.apply(error);
-            // TODO display error message
             console.log(error);
             if (that._redirectOnError) {
               $ionicLoading.hide();
+              // TODO: Don't do it here. Emmit an event that will redirect, if
+              // needed, somewhere else.
               $state.go('app.welcome');
               toast.show(error, 'long', 'center');
             }
@@ -187,6 +196,7 @@ define(['angular'
           }
 
           function call() {
+            // Will automatically retry some times if failed.
             retries++;
             deferredCall(that.promises
                        , callNgResourceFunction
@@ -203,6 +213,7 @@ define(['angular'
                   // Authorized. Retry
                   call();
                 }, function(error) {
+                  // Let's retry?
                   if (retries < totalRetries) {
                     call()
                   } else {
@@ -210,6 +221,7 @@ define(['angular'
                   }
                 });
               } else {
+                // Let's retry?
                 if (retries < totalRetries) {
                   call()
                 } else {
@@ -220,6 +232,7 @@ define(['angular'
           }
           // Try to get the resource content
           call();
+          // Return a promise because the requests are async.
           return deferred.promise;
         };
       });

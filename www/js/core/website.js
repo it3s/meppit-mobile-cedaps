@@ -10,6 +10,7 @@ define(['angular', 'config', 'core/network']
   .factory('website', ['$ionicPlatform', '$log', '$q', '$http'
   , 'networkFactory'
   , function ($ionicPlatform, $log, $q, $http, networkFactory) {
+      // You can edit `config.js` to change website info.
       return networkFactory(angular.extend({}, {}, config.website));
     }]);
 
