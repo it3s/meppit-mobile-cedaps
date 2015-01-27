@@ -30,7 +30,7 @@ define(['angular'], function (angular) {
           function loadMore() {
             var deferred = $q.defer();
 
-            resource.query({}, function(items, responseHeaders) {
+            resource.query({}).then(function(items) {
               angular.forEach(items, function(item) {
                 collection.push(item);
               });
@@ -61,6 +61,8 @@ define(['angular'], function (angular) {
           } else {
             send()
           }
+
+          this.cur = last;
         }
       }, $q.defer());
 

@@ -14,6 +14,12 @@ define(['angular'
 
   angular.module(moduleName, moduleDeps)
 
+  .config(['$httpProvider', function($httpProvider) {
+    // Force the post Content-Type because for some reason its not working
+    // correctly using the default value.
+    $httpProvider.defaults.headers.post = {'Content-Type': 'application/json'};
+  }])
+
   .config(routes)
 
   .run(['$ionicPlatform', function($ionicPlatform) {

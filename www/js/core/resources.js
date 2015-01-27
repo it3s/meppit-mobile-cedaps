@@ -66,12 +66,17 @@ define(['angular'
           , 'remove': { method: 'DELETE' }
           , 'delete': { method: 'DELETE' }
           }
+          // Define the headers that will be send every time a request is made
         , headersDefaults = {
             Authorization: function() {
               return authentication.getAuthorizationHeader();
             }
           , Accept: contentTypes[defaultContentType]
           };
+
+      function transformResponseFn(data, headersGetter) {
+        return angular.fromJson(data);
+      }
 
       // Create the ngResource.resource adding authorization token as default
       // header.
@@ -83,14 +88,23 @@ define(['angular'
         _headers = angular.copy(headers);
         _actions = angular.extend({}, angular.copy(actionsDefaults)
                                     , angular.copy(actions));
+        // Add our specific configurations to each action
         angular.forEach(_actions, function(action, name) {
           if (name === 'query' && queryReturnsArray === false) {
             action.isArray = false;
           }
           if (angular.isDefined(_headers)) {
-            // Add Authorization header to all actions
-            if (!angular.isDefined(action.headers)) { action.headers = {}; }
+            // Add our headers to all actions
+            if (!angular.isDefined(action.headers)) {
+              action.headers = {};
+            }
             angular.extend(action.headers, _headers)
+            // Add our transformResponse function
+            if (!angular.isDefined(action.transformResponse)) {
+              action.transformResponse = [];
+            }
+            action.transformResponse = action.transformResponse.slice();
+            action.transformResponse.push(transformResponseFn);
           }
           // Converts actions endpoint to absolute url
           if (angular.isDefined(action.url)) {

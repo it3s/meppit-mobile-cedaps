@@ -29,6 +29,14 @@ define(['angular'
     // `$scope.datasource` is an object used by `ui-scroll`
     $scope.datasource = datasource(resource, $ionicLoading.hide);
     $scope.newComment = angular.extend({}, { comment: '' }, content);
+    $scope.saveNewComment = function() {
+          // Save the current comment
+          commentsResource.save($scope.newComment).then(function(comment) {
+            // TODO: Display the new comment
+          });
+          // Create a new blank comment object to be possible to write more comments
+          $scope.newComment = angular.extend({}, { comment: '' }, content);
+        };
   }])
 
   .controller('commentCtrl', ['$scope', '$stateParams', 'commentsResource'

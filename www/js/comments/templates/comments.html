@@ -5,7 +5,7 @@
     </ion-list>
     <div class="bar bar-footer comment-input">
     <textarea ng-model="newComment.comment" placeholder="Escreva um comentário"></textarea>
-    <button class="comment-send button ion-android-send button-positive button-clear">Enviar</button>
+    <button class="comment-send button ion-android-send button-positive button-clear" ng-click="saveNewComment()">Enviar</button>
   </div>
   </ion-content>
 </ion-view>
