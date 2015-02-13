@@ -1,9 +1,10 @@
 <!-- This template receives geojson -->
 <ion-view cache-view="false" title="{{ object.properties.name }}" ng-init="tab=1">
   <div class="tabs tabs-striped tabs-top tabs-positive tabs-color-light">
-    <a title="Info" class="tab-item" ng-class="{active: tab==1}" ng-click="tab=1"><i class="icon ion-information"></i>Info</a>
-    <a title="Mapa" class="tab-item" ng-class="{active: tab==2}" ng-click="tab=2"><i class="icon ion-map"></i>Mapa</a>
-    <a title="Comentários" class="tab-item" ng-class="{active: tab==3}" ng-click="tab=3"><i class="icon ion-chatbox"></i>Comentários</a>
+    <a title="Info" class="tab-item" ng-class="{active: tab==1}" ng-click="tab=1">Info</a>
+    <a title="Mapa" class="tab-item" ng-class="{active: tab==2}" ng-click="tab=2">Mapa</a>
+    <a title="Comentários" class="tab-item" ng-class="{active: tab==3}" ng-click="tab=3">Comentários</a>
+    <a title="Comentários" class="tab-item" ng-class="{active: tab==4}" ng-click="tab=4">Fotos</a>
   </div>
 
   <ion-content class="has-header has-tabs-top" overflow-scroll="true" ng-show="tab==1">
@@ -17,6 +18,9 @@
 
   <ion-content class="has-header has-tabs-top" overflow-scroll="true" ng-show="tab==3">
     <div ng-include src="'js/comments/templates/comments.html'" ng-controller="commentsCtrl"></div>
+  </ion-content>
+
+  <ion-content class="has-header has-tabs-top" overflow-scroll="true" ng-show="tab==4">
   </ion-content>
 
 </ion-view>

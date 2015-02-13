@@ -1,6 +1,8 @@
-<ion-list>
-  <ion-item ui-scroll="item in datasource" is-loading="loading" padding="5" buffer-size="25" href="#/app{{ baseUrl }}/comments/{{ item.id }}"><div dynamic-content="item.comment"></div></ion-item>
-</ion-list>
+<ion-content class="comments" overflow-scroll="true">
+  <ion-list>
+    <ion-item ui-scroll="item in datasource" is-loading="loading" padding="5" buffer-size="25" href="#/app{{ baseUrl }}/comments/{{ item.id }}"><div dynamic-content="item.comment"></div></ion-item>
+  </ion-list>
+</ion-content>
 <div class="bar bar-footer comment-input">
   <textarea ng-model="newComment.comment" placeholder="Escreva um comentário"></textarea>
   <button class="comment-send button ion-android-send button-positive button-clear" ng-click="saveNewComment()">Enviar</button>

@@ -11,6 +11,10 @@
   font-size: 0.8em;
 }
 
+.comments .list {
+  padding-bottom: 70px;
+}
+
 .comment-input {
   height: 70px;
   padding: 10px;
