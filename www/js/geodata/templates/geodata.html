@@ -1,23 +1,22 @@
 <!-- This template receives geojson -->
-<ion-view title="{{ geodata.properties.name }}">
-  <ion-content overflow-scroll="true">
-    <map-view data-tap-disabled="true" geojson="geodata" height="50%" class="meppit-map"></map-view>
-      <h1 class="item">{{ geodata.properties.name }}</h1>
-      <div class="item item-body" dynamic-content="geodata.properties.description"></div>
-      <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item" href="#">
-          <i class="icon ion-thumbsup"></i>
-          Curtir
-        </a>
-        <a class="tab-item" href="#/app/geo_data/{{ geodata.id }}/comments">
-          <i class="icon ion-chatbox"></i>
-          Comentar
-        </a>
-        <a class="tab-item" href="#">
-          <i class="icon ion-share"></i>
-          Compartilhar
-        </a>
-      </div>
-    </div>
-  </ion-content>
+<ion-view title="{{ object.properties.name }}">
+  <ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light">
+    <ion-tab title="Info" icon-on="ion-information" icon-off="ion-information">
+      <ion-content overflow-scroll="true">
+          <h1 class="item">{{ object.properties.name }}</h1>
+          <div class="item item-body" dynamic-content="object.properties.description"></div>
+        </div>
+      </ion-content>
+    </ion-tab>
+    <ion-tab title="Mapa" icon-on="ion-map" icon-off="ion-map">
+      <ion-content overflow-scroll="true">
+        <map-view data-tap-disabled="true" geojson="object" height="100%" class="meppit-map"></map-view>
+      </ion-content>
+    </ion-tab>
+    <ion-tab title="Comentários" icon-on="ion-chatbox" icon-off="ion-chatbox">
+      <ion-content overflow-scroll="true">
+        <div ng-include src="'js/comments/templates/comments.html'" ng-controller="commentsCtrl"></div>
+      </ion-content>
+    </ion-tab>
+  </ion-tabs>
 </ion-view>

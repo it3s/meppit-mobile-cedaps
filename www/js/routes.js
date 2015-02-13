@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+app.router = (function(angular) {
 
   'use strict';
 
@@ -43,7 +43,7 @@ define(['angular'], function(angular) {
     })
 
     .state('app.geodata', {
-      url: '/geo_data/:geodataId'
+      url: '/geo_data/:id'
     , views: {
         'menuContent': {
           templateUrl: 'js/geodata/templates/geodata.html'
@@ -56,14 +56,14 @@ define(['angular'], function(angular) {
           // Get object using 'resolve' instead of controller to be able to add
           // the object name in title.
           return geodataResource.as('geojson').get({
-            geodataId: $stateParams.geodataId
+            geodataId: $stateParams.id
           });
         }]
       }
     })
 
     .state('app.geodata_comments', {
-      url: '/geo_data/:geodataId/comments'
+      url: '/geo_data/:parentId/comments'
       , views: {
         'menuContent': {
           templateUrl: 'js/comments/templates/comments.html'
@@ -73,23 +73,23 @@ define(['angular'], function(angular) {
       , resolve: {
           query: ['$stateParams', function($stateParams) {
             return {
-              owner: 'GeoData#' + $stateParams.geodataId
+              owner: 'GeoData#' + $stateParams.parentId
             };
           }]
         , baseUrl: ['$stateParams', function($stateParams) {
-            return '/geo_data/' + $stateParams.geodataId;
+            return '/geo_data/' + $stateParams.parentId;
           }]
         , content: ['$stateParams', function($stateParams) {
             return {
               content_type: 'GeoData'
-            , content_id: $stateParams.geodataId
+            , content_id: $stateParams.parentId
             };
           }]
       }
     })
 
     .state('app.geodata_comment', {
-      url: '/geo_data/:geodataId/comments/:commentId'
+      url: '/geo_data/:parentId/comments/:id'
       , views: {
         'menuContent': {
           templateUrl: 'js/comments/templates/comment.html'
@@ -138,4 +138,4 @@ define(['angular'], function(angular) {
     $urlRouterProvider.otherwise('/app/welcome');
   }];
 
-});
+})(angular);

@@ -29,3 +29,7 @@
   /* Remove attribution from map. We will display it at another place. */
   display: none;
 }
+
+.pane.has-tabs-top {
+  padding-top: 93px;
+}

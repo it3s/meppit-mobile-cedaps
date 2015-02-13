@@ -18,13 +18,17 @@ define(['angular'
                              , '$ionicLoading'
                              , 'datasource'
                              , 'commentsResource'
-                             , 'query'
-                             , 'baseUrl'
-                             , 'content'
-, function($scope, $q, $ionicLoading, datasource, commentsResource, query, baseUrl, content) {
-    var resource = commentsResource.where(query);
+, function($scope, $q, $ionicLoading, datasource, commentsResource) {
 
-    $scope.baseUrl = baseUrl;
+    var query = {
+      owner: $scope.objectType + '#' + $scope.objectId
+    }
+  , content = {
+      content_type: $scope.objectType
+    , content_id: $scope.objectId
+    }
+  , resource = commentsResource.where(query);
+
     $ionicLoading.show();
     // `$scope.datasource` is an object used by `ui-scroll`
     $scope.datasource = datasource(resource, $ionicLoading.hide);
@@ -42,7 +46,7 @@ define(['angular'
   .controller('commentCtrl', ['$scope', '$stateParams', 'commentsResource'
 , function($scope, $stateParams, commentsResource) {
     var comment = commentsResource.get({
-      commentId: $stateParams.commentId
+      commentId: $stateParams.id
     }).then(function(comment) {
       $scope.comment = comment;
     });

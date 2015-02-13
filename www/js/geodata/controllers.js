@@ -63,10 +63,17 @@ define(['angular'
 
   }])
 
-  .controller('geodataCtrl', ['$scope', '$stateParams', 'geodata'
-, function($scope, $stateParams, geodata) {
+  .controller('geodataCtrl', ['$scope', '$stateParams', '$state', 'geodata'
+, function($scope, $stateParams, $state, geodata) {
     // The `geoData` value is set by state provider resolver
-    $scope.geodata = geodata;
+    $scope.object = geodata;
+    $scope.objectId = geodata.id;
+    $scope.objectType = 'GeoData'
+    $scope.baseUrl = '/geo_data/' + geodata.id;
+    $scope.goto = function(state, params) {
+      console.log('--->', state, params);
+      $state.transitionTo(state, params, { reload: true, inherit: false, notify: true });
+    };
   }]);
 
   return moduleName;
