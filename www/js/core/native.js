@@ -1,9 +1,9 @@
-define(['angular', 'ngCordova'], function(angular, ngCordova) {
+app.core.native = (function(angular) {
 
   'use strict';
 
   var moduleName = 'app.core.native'
-    , moduleDeps = [ngCordova];
+    , moduleDeps = ['ngCordova'];
 
   // Check if a specified cordova plugin is included.
   function hasPlugin(pluginName) {
@@ -36,4 +36,4 @@ define(['angular', 'ngCordova'], function(angular, ngCordova) {
 
   return moduleName;
 
-});
+})(angular);

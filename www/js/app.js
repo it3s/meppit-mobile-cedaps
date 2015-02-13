@@ -1,16 +1,13 @@
-define(['angular'
-      , 'routes'
-      , 'ngIonic'
-      , 'ngCordova'
-      , 'core/resources'
-      , 'geodata/controllers'
-      , 'comments/controllers']
-, function (angular, routes, ngIonic, ngCordova, resources, geoDataCtrls, commentsCtrls) {
+app.main = (function (angular) {
 
   'use strict';
 
   var moduleName = 'app'
-    , moduleDeps = [ngIonic, ngCordova, resources, geoDataCtrls, commentsCtrls];
+    , moduleDeps = ['ionic'
+                  , 'ngCordova'
+                  , 'app.core.resources'
+                  , 'app.geodata.controllers'
+                  , 'app.comments.controllers'];
 
   angular.module(moduleName, moduleDeps)
 
@@ -20,7 +17,7 @@ define(['angular'
     $httpProvider.defaults.headers.post = {'Content-Type': 'application/json'};
   }])
 
-  .config(routes)
+  .config(app.routes)
 
   .run(['$ionicPlatform', function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -36,4 +33,4 @@ define(['angular'
   }]);
 
   return moduleName;
-});
+})(angular);

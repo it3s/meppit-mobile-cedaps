@@ -1,4 +1,4 @@
-define(['angular', 'meppit'], function(angular, Meppit) {
+app.core.directives = (function(angular, Meppit) {
 
   'use strict';
 
@@ -86,12 +86,14 @@ define(['angular', 'meppit'], function(angular, Meppit) {
             }
             // Define the function used to open external links in system browser
             scope.loadPage = function(url) {
-              $cordovaInAppBrowser.open(url, '_system')
+              console.log("Open " + url);
+              $cordovaInAppBrowser.open(url, '_system');
               return false;
             };
             // Append the dynamic content to DOM tree
             element.append(html);
             element.addClass("dynamic-content");
+            $compile(element.contents())(scope);
           });
         };
       }
@@ -99,4 +101,4 @@ define(['angular', 'meppit'], function(angular, Meppit) {
   }]);
 
   return moduleName;
-});
+})(angular, Meppit);

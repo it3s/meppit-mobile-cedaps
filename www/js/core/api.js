@@ -1,4 +1,4 @@
-define(['angular', 'config'], function(angular, config) {
+app.core.api = (function(angular) {
 
   'use strict';
 
@@ -64,8 +64,8 @@ define(['angular', 'config'], function(angular, config) {
           }
         };
 
-    return angular.extend({}, apiDefaults, config.api);
+    return angular.extend({}, apiDefaults, app.config.api);
   }]);
 
   return moduleName;
-});
+})(angular);

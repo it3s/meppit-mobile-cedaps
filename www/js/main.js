@@ -68,7 +68,7 @@ require(['cordova', 'ionic', 'angular', 'app']
   'use strict';
 
   var start = function(){
-    angular.bootstrap(document, [app]);
+    angular.bootstrap(document, ['app']);
   }
   if (document.body) {
     start();

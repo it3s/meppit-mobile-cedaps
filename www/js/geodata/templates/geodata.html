@@ -1,22 +1,22 @@
 <!-- This template receives geojson -->
-<ion-view title="{{ object.properties.name }}">
-  <ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light">
-    <ion-tab title="Info" icon-on="ion-information" icon-off="ion-information">
-      <ion-content overflow-scroll="true">
-          <h1 class="item">{{ object.properties.name }}</h1>
-          <div class="item item-body" dynamic-content="object.properties.description"></div>
-        </div>
-      </ion-content>
-    </ion-tab>
-    <ion-tab title="Mapa" icon-on="ion-map" icon-off="ion-map">
-      <ion-content overflow-scroll="true">
-        <map-view data-tap-disabled="true" geojson="object" height="100%" class="meppit-map"></map-view>
-      </ion-content>
-    </ion-tab>
-    <ion-tab title="Comentários" icon-on="ion-chatbox" icon-off="ion-chatbox">
-      <ion-content overflow-scroll="true">
-        <div ng-include src="'js/comments/templates/comments.html'" ng-controller="commentsCtrl"></div>
-      </ion-content>
-    </ion-tab>
-  </ion-tabs>
+<ion-view cache-view="false" title="{{ object.properties.name }}" ng-init="tab=1">
+  <div class="tabs tabs-striped tabs-top tabs-positive tabs-color-light">
+    <a title="Info" class="tab-item" ng-class="{active: tab==1}" ng-click="tab=1"><i class="icon ion-information"></i>Info</a>
+    <a title="Mapa" class="tab-item" ng-class="{active: tab==2}" ng-click="tab=2"><i class="icon ion-map"></i>Mapa</a>
+    <a title="Comentários" class="tab-item" ng-class="{active: tab==3}" ng-click="tab=3"><i class="icon ion-chatbox"></i>Comentários</a>
+  </div>
+
+  <ion-content class="has-header has-tabs-top" overflow-scroll="true" ng-show="tab==1">
+    <h1 class="item">{{ object.properties.name }}</h1>
+    <div class="item item-body" dynamic-content="object.properties.description"></div>
+  </ion-content>
+
+  <ion-content class="has-header has-tabs-top" overflow-scroll="true" ng-show="tab==2">
+    <map-view data-tap-disabled="true" geojson="object" height="100%" class="meppit-map"></map-view>
+  </ion-content>
+
+  <ion-content class="has-header has-tabs-top" overflow-scroll="true" ng-show="tab==3">
+    <div ng-include src="'js/comments/templates/comments.html'" ng-controller="commentsCtrl"></div>
+  </ion-content>
+
 </ion-view>

@@ -1,4 +1,4 @@
-app.router = (function(angular) {
+app.routes = (function(angular) {
 
   'use strict';
 

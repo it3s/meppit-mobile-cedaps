@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+app.core.localStorage = (function(angular) {
 
   'use strict';
 
@@ -40,4 +40,4 @@ define(['angular'], function(angular) {
   }]);
 
   return moduleName;
-});
+})(angular);

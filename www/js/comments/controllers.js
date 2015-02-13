@@ -1,15 +1,14 @@
-define(['angular'
-      , 'ngCordova'
-      , 'vendor/scroll'
-      , 'core/resources'
-      , 'core/datasource'
-      , 'core/directives']
-, function(angular, ngCordova, scroll, resources, datasource, directives) {
+app.comments = {};
+app.comments.controllers = (function(angular) {
 
   'use strict';
 
   var moduleName = 'app.comments.controllers'
-    , moduleDeps = [ngCordova, scroll, resources, datasource, directives];
+    , moduleDeps = ['ngCordova'
+                  , 'app.core.ui.scroll'
+                  , 'app.core.resources'
+                  , 'app.core.datasource'
+                  , 'app.core.directives'];
 
   angular.module(moduleName, moduleDeps)
 
@@ -53,4 +52,4 @@ define(['angular'
   }]);
 
   return moduleName;
-});
+})(angular);

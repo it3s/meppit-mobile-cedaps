@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+app.core.network = (function(angular) {
 
   'use strict';
 
@@ -52,4 +52,4 @@ define(['angular'], function(angular) {
   }]);
 
   return moduleName;
-});
+})(angular);

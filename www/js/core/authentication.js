@@ -1,10 +1,11 @@
-define(['angular', 'config', './oauth', './website', 'core/localStorage']
-, function(angular, config, oauth, website, localStorage) {
+app.core.authentication = (function(angular) {
 
   'use strict';
 
   var moduleName = 'app.core.authentication'
-    , moduleDeps = [oauth, website, localStorage];
+    , moduleDeps = ['app.core.oauth'
+                  , 'app.core.website'
+                  , 'app.core.localStorage'];
 
   angular.module(moduleName, moduleDeps)
 
@@ -152,4 +153,4 @@ define(['angular', 'config', './oauth', './website', 'core/localStorage']
   }]);
 
   return moduleName;
-});
+})(angular);

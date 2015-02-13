@@ -1,8 +1,7 @@
 <ion-view title="Serviços próximos">
-  <ion-content ui-scroll-viewport padding="false" class="has-header" overflow-scroll="true" >
-    <button ng-click="alert('aaa')">test</button>
+  <ion-content ui-scroll-viewport padding="false" class="has-header" overflow-scroll="true">
     <ion-list>
-      <ion-item ui-scroll="item in datasource" is-loading="loading" padding="5" buffer-size="25">{{ item.name }}</ion-item>
+      <ion-item ui-scroll="item in datasource" is-loading="loading" padding="5" buffer-size="25" ui-sref="app.geodata({ id: item.id })">{{ item.name }}</ion-item>
     </ion-list>
   </ion-content>
 </ion-view>

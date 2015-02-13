@@ -1,18 +1,18 @@
-define(['angular', 'config', 'core/network', 'core/native']
-, function(angular, config, network, native) {
+app.core.oauth = (function(angular) {
 
   'use strict';
 
   var moduleName = 'app.core.oauth'
-    , moduleDeps = [network, native];
+    , moduleDeps = ['app.core.network'
+                  , 'app.core.native'];
 
   angular.module(moduleName, moduleDeps)
   .factory('OAuth', ['$ionicPlatform', '$log', '$q', '$http'
                    , 'networkFactory', 'hasPlugin'
 , function ($ionicPlatform, $log, $q, $http, networkFactory, hasPlugin) {
     var redirectUri = 'http://localhost/callback'
-      , clientId = config.oauth.clientId
-      , clientSecret = config.oauth.clientSecret
+      , clientId = app.config.oauth.clientId
+      , clientSecret = app.config.oauth.clientSecret
       // You can edit `config.js` to use a custom host
       , defaults = {
           protocol: 'https'
@@ -20,7 +20,7 @@ define(['angular', 'config', 'core/network', 'core/native']
         , port: ''
         , path: 'oauth'
         }
-      , network = networkFactory(angular.extend({}, defaults, config.oauth));
+      , network = networkFactory(angular.extend({}, defaults, app.config.oauth));
 
     $ionicPlatform.ready(function() {
       // Use the local test uri if running inside a web browser
@@ -126,4 +126,4 @@ define(['angular', 'config', 'core/network', 'core/native']
   }]);
 
   return moduleName;
-});
+})(angular);

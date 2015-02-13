@@ -1,4 +1,4 @@
-define(['angular'], function (angular) {
+app.core.datasource = (function (angular) {
 
   'use strict';
 
@@ -71,4 +71,4 @@ define(['angular'], function (angular) {
   }]);
 
   return moduleName;
-});
+})(angular);

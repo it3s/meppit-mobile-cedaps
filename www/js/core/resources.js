@@ -1,16 +1,13 @@
-define(['angular'
-       , 'ngCordova'
-       , 'ngResource'
-       , 'core/api'
-       , 'core/network'
-       , 'core/native'
-       , 'core/authentication']
-, function(angular, ngCordova, ngResource, api, network, native, authentication) {
+app.core.resources = (function(angular) {
 
   'use strict';
 
   var moduleName = 'app.core.resources'
-    , moduleDeps = [ngResource, api, network, native, authentication];
+    , moduleDeps = ['ngResource'
+                  , 'app.core.api'
+                  , 'app.core.network'
+                  , 'app.core.native'
+                  , 'app.core.authentication'];
 
   angular.module(moduleName, moduleDeps)
 
@@ -256,7 +253,7 @@ define(['angular'
     return resourceFactory;
   }])
 
-  angular.injector([api]).invoke(['api', function(api) {
+  angular.injector(['app.core.api']).invoke(['api', function(api) {
     // Create dynamically resources for all configured API resources
     // See `api.js`
     angular.forEach(api.resources, function(res, name) {
@@ -271,4 +268,4 @@ define(['angular'
   }]);
 
   return moduleName;
-});
+})(angular);

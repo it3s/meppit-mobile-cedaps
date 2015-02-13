@@ -1,16 +1,16 @@
-define(['angular'
-      , 'ngCordova'
-      , 'vendor/scroll'
-      , 'core/resources'
-      , 'core/authentication'
-      , 'core/datasource'
-      , 'core/directives']
-, function(angular, ngCordova, scroll, resources, authentication, datasource, directives) {
+app.geodata = {};
+app.geodata.controllers = (
+function(angular) {
 
   'use strict';
 
   var moduleName = 'app.geodata.controllers'
-    , moduleDeps = [ngCordova, scroll, authentication, resources, datasource, directives];
+    , moduleDeps = ['ngCordova'
+                  , 'app.core.ui.scroll'
+                  , 'app.core.resources'
+                  , 'app.core.authentication'
+                  , 'app.core.datasource'
+                  , 'app.core.directives'];
 
   angular.module(moduleName, moduleDeps)
 
@@ -37,9 +37,10 @@ define(['angular'
                                       , '$q'
                                       , '$cordovaGeolocation'
                                       , '$ionicLoading'
+                                      , '$state'
                                       , 'datasource'
                                       , 'geodataResource'
-, function($scope, $q, $cordovaGeolocation, $ionicLoading
+, function($scope, $q, $cordovaGeolocation, $ionicLoading, $state
          , datasource, geodataResource) {
     var posOptions = { timeout: 10000, enableHighAccuracy: false }
       , lonLat = $q.defer()
@@ -63,18 +64,14 @@ define(['angular'
 
   }])
 
-  .controller('geodataCtrl', ['$scope', '$stateParams', '$state', 'geodata'
-, function($scope, $stateParams, $state, geodata) {
+  .controller('geodataCtrl', ['$scope', '$state', 'geodata'
+, function($scope, $state, geodata) {
     // The `geoData` value is set by state provider resolver
     $scope.object = geodata;
     $scope.objectId = geodata.id;
     $scope.objectType = 'GeoData'
     $scope.baseUrl = '/geo_data/' + geodata.id;
-    $scope.goto = function(state, params) {
-      console.log('--->', state, params);
-      $state.transitionTo(state, params, { reload: true, inherit: false, notify: true });
-    };
   }]);
 
   return moduleName;
-});
+})(angular);
